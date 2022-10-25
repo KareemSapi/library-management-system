@@ -33,14 +33,14 @@ exports.user_detail =  (req, res, next) => {
 }
 
 exports.user_list = (req, res) => {
-    User.find({}, "title author")
+    User.find({}, "name email")
     .sort({ name: 1 })
     .exec(function (err, list_users) {
       if (err) {
         return next(err);
       }
       //Successful, so render
-      res.render("book_list", { title: "Book List", user_list: list_users });
+      res.render("user_list", { title: "User List", user_list: list_users });
     });
   };
 

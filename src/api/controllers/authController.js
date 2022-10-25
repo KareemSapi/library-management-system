@@ -3,6 +3,8 @@
 const passport = require('passport');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 
 // exports.register = async (req, res) => {
@@ -76,13 +78,32 @@ const bcrypt = require('bcrypt');
 //     }
 // }
 
-exports.login = async (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/users/login',
-        failureFlash: true
+exports.login = async (req, res, next) => { console.log(req.body);
 
-    })(req, res, next);
+    passport.authenticate('local', 
+    {
+        session: false,
+        successRedirect: '/catalog',
+        failureRedirect: '/auth/login',
+        failureFlash: true
+    }, 
+    (err, user) => { console.log(err,user)
+        if(err || !user){
+          return res.status(400).json({message: `Incorrect username or password`})
+        }
+        
+        req.login(user, { session: false }, (error) => { 
+              if (error) {
+                  return res.send(error);
+              } 
+    
+                const accessToken = jwt.sign(user, config.get('auth.jwt.secret'), {expiresIn: '1y'}) //create access token
+    
+            return res.status(200).json({  accessToken, message: `Login succesful` });
+        });
+        
+    
+      })(req,res)
 }
 
 exports.logout = (req, res) => {
@@ -92,6 +113,7 @@ exports.logout = (req, res) => {
 }
 
 exports.register = async (req, res) => { console.log(req.body)
+    
     try {
         const USER = await User.findOne({email: req.body.email})
         console.log(USER)
@@ -118,8 +140,10 @@ exports.register = async (req, res) => { console.log(req.body)
             console.log(hash);
 
         }))
+
+        res.redirect('/auth/login');
   
-        return res.status(201).json({message: `User succesfully created`})
+        //return res.status(201).json({message: `User succesfully created`})
   
       } catch (error) {
           console.error(error);

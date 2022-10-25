@@ -15,6 +15,7 @@
  const path = require('path');
  const mongoose = require('mongoose');
  const cookieParser = require('cookie-parser');
+ const helmet = require('helmet')
  
  require('./passport');
 
@@ -41,6 +42,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
  app.use(compression())
  app.use(express.json())
  app.use(cookieParser());
+ app.use(helmet());
 
 app.use(express.static(path.join(__dirname, "public")));
  
@@ -49,9 +51,9 @@ app.use(express.static(path.join(__dirname, "public")));
  const PORT = 3000 || port
  const auth = passport.authenticate('jwt', {session: false})
  
- app.use(`${root}/auth`, authRouter);
- app.use(`${root}/user`, auth, userRouter);
- app.use(`${root}/catalog`, auth, bookRouter);
+ app.use(`/auth`, authRouter);
+ app.use(`/user`,  userRouter);
+ app.use(`/catalog`,  bookRouter);
  
  app.get('/', (req,res) => {
      res.send("Welcome to " + app_name)

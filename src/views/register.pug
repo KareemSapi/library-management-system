@@ -1,0 +1,27 @@
+extends auth_layout 
+
+block content
+    div.text-center
+        form(class="form-signup" method="POST" action="/auth/register")
+            #error
+                if error
+                    p.text-danger Error!!!
+
+            h1(class='h3 mb-3 font-weight-normal') Please register
+
+            label( for="inputName" class="sr-only") Name
+            input(type="text" name="name" id="inputName" class="form-control" placeholder="Enter You Name" required autofocus)            
+
+            label( for="inputEmail" class="sr-only") Email address
+            input(type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus)
+
+            label(for="inputPassword" class="sr-only") Password
+            input(type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required)
+
+            label(for="inputPassword" class="sr-only") Re-Type Password
+            input(type="password" name="password" id="inputPassword" class="form-control" placeholder="Repeat Password" required)
+
+       
+            button(class='btn btn-lg btn-primary btn-block' type="submit") Sign up
+//- - var pClasses=['mt-5', 'mb-3', 'text-muted'];
+//-             p(class=pClasses) © 2017-2018

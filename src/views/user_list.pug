@@ -6,8 +6,8 @@ block content
   ul
     each user in user_list
       li
-        a(href=user.url) #{user._id}
-        |  (#{user.name})
+        a(href=user.url) #{user.name}
+        |  (#{user.email})
 
     else
       li There are no users.

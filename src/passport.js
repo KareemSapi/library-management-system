@@ -14,16 +14,15 @@
  const ExtractJWT = passportJWT.ExtractJwt;
  
  const User = require('./api/models/User');
- const crypto = require('crypto');
  const bcrypt = require('bcrypt');
  const config = require('config');
  const secret = config.get('auth.jwt.secret');
  
  passport.use(
-    new LocalStrategy({ usernameField: 'email'}, (email, password, done) => {
+    new LocalStrategy( (username, password, done) => {console.log(username, password)
         //Match user
-        User.findOne({ email: email })
-          .then(user => {
+        User.findOne({ email: username })
+          .then(user => { console.log(user)
               if(!user){
                   return done(null, false, {message: 'Email or Password is wrong'});
               }
@@ -32,7 +31,12 @@
                   if(err) throw err;
 
                   if(isMatch){
-                      return done(null, user);
+                      return done(null, {
+                        id: user._id,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role
+                      });
                   }
                   else{
                       return done(null, false, {message: 'Email or Password is wrong'})
@@ -54,3 +58,4 @@
      function(jwt_payload, done){
         return done(null, jwt_payload)
  }))
+ 

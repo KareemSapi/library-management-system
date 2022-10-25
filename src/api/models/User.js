@@ -9,7 +9,9 @@
 
 const mongoose = require('mongoose');
 
-const UserSchema = mongoose.Schema({
+const Schema = mongoose.Schema
+
+const UserSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -26,11 +28,15 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    // date: {
-    //     type: Date,
-    //     default: Date.now
-    // }
+
 });
+
+// Virtual for user's URL
+UserSchema.virtual("url").get(function () {
+    // We don't use an arrow function as we'll need the this object
+    return `/user/${this._id}`;
+});
+  
 
 const User = mongoose.model('User', UserSchema);
 
