@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1 Name: #{user._id}
+
+  p #[strong Name:]
+    a(href=user.name.url) #{user.name}
+  p #[strong Email:] #{user.email}
+  p #[strong Role:] #{user.role}
+  button(type="submit") 
+//-   p #[strong Genre:]
+//-     each val, index in book.genre
+//-       a(href=val.url) #{val.name}
+//-       if index < book.genre.length - 1
+//-         |,

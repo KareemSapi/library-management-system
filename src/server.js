@@ -30,6 +30,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
  
  const authRouter = require(`./api/routes/auth`);
  const userRouter = require('./api/routes/user');
+ const bookRouter = require('./api/routes/book');
  
  const app = express();
  
@@ -50,6 +51,7 @@ app.use(express.static(path.join(__dirname, "public")));
  
  app.use(`${root}/auth`, authRouter);
  app.use(`${root}/user`, auth, userRouter);
+ app.use(`${root}/catalog`, auth, bookRouter);
  
  app.get('/', (req,res) => {
      res.send("Welcome to " + app_name)
