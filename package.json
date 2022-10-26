@@ -15,7 +15,9 @@
     "type": "git",
     "url": "git+https://github.com/KareemSapi/library-management-system.git"
   },
-  "keywords": [],
+  "keywords": [
+    "heroku"
+  ],
   "author": "Kareem Sapi<sapikareem@gmail.com>",
   "license": "ISC",
   "bugs": {
