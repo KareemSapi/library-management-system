@@ -65,4 +65,4 @@ app.use(express.static(path.join(__dirname, "public")));
      res.render('login')
  })
  
- app.listen(PORT, console.log(`Server started listening on port: ${PORT}`))
+ app.listen(config.get('api.port'), console.log(`Server started listening on port: ${config.get('api.port')}`))
