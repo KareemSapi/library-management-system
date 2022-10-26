@@ -6,105 +6,33 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
+// exports.login = async (req, res) => { console.log(req.body);
 
-// exports.register = async (req, res) => {
-//     const { name, email, password, password2} = req.body;
-//     let errors = [];
-
-//     //Check required fields
-//     if(!name || !email || !password || !password2 ){
-//         errors.push({msg: 'Please fill in all fields'});
-//     }
-
-//     //Check passwords match
-//     if(password !== password2){
-//         errors.push({msg: 'Passwords do not match'});
-//     }
-
-//     //Check password length
-//     if(password.length < 6){
-//         errors.push({msg: 'Password should be at least 6 characters long'});
-//     }
-
-//     if(errors.length > 0){
-//         res.render('register', {
-//             errors,
-//             name,
-//             email,
-//             password,
-//             password2
+//     passport.authenticate('local', 
+//     {
+//         session: false,
+//         successRedirect: '/catalog',
+//         failureRedirect: '/auth/login',
+//         failureFlash: true
+//     }, 
+//     (err, user) => { console.log(err,user)
+//         if(err || !user){
+//           return res.status(400).json({message: `Incorrect username or password`})
+//         }
+        
+//         req.login(user, { session: false }, (error) => { 
+//               if (error) {
+//                   return res.send(error);
+//               } 
+    
+//                 const accessToken = jwt.sign(user, config.get('auth.jwt.secret'), {expiresIn: '1y'}) //create access token
+    
+//             return res.status(200).json({  accessToken, message: `Login succesful` });
 //         });
-//     }
-//     else{
-//         //Validation passed
-//         User.findOne({ email: email})
-//            .then(user => {
-//                if(user){
-//                    //If user exists
-//                    errors.push({msg: 'email already exists.'})
-//                    res.render('register', {
-//                     errors,
-//                     name,
-//                     email,
-//                     password,
-//                     password2
-//                 });
-//                }
-//                else{
-//                    const newUser = new User({
-//                        name,
-//                        email,
-//                        password,
-//                    });
-
-//                    //Hash password
-//                    bcrypt.genSalt(10, (err, salt) => bcrypt.hash(newUser.password, salt, (err, hash) => {
-//                        if(err) throw err;
-
-//                        //set password to hashed
-//                        newUser.password = hash;
-
-//                        //save user
-//                        newUser.save()
-//                          .then(user => {
-//                             req.flash('success_msg', 'You are now registered') 
-//                             res.redirect('/users/login')})
-//                          .catch(err => console.log(err));
-//                    }))
-//                    console.log(newUser);
-                
-//                }
-//            })
-//     }
+        
+    
+//       })(req,res)
 // }
-
-exports.login = async (req, res, next) => { console.log(req.body);
-
-    passport.authenticate('local', 
-    {
-        session: false,
-        successRedirect: '/catalog',
-        failureRedirect: '/auth/login',
-        failureFlash: true
-    }, 
-    (err, user) => { console.log(err,user)
-        if(err || !user){
-          return res.status(400).json({message: `Incorrect username or password`})
-        }
-        
-        req.login(user, { session: false }, (error) => { 
-              if (error) {
-                  return res.send(error);
-              } 
-    
-                const accessToken = jwt.sign(user, config.get('auth.jwt.secret'), {expiresIn: '1y'}) //create access token
-    
-            return res.status(200).json({  accessToken, message: `Login succesful` });
-        });
-        
-    
-      })(req,res)
-}
 
 exports.logout = (req, res) => {
     req.logOut();
@@ -112,7 +40,7 @@ exports.logout = (req, res) => {
     res.redirect('/users/login');
 }
 
-exports.register = async (req, res) => { console.log(req.body)
+exports.register = async (req, res) => { //console.log(req.body)
     
     try {
         const USER = await User.findOne({email: req.body.email})
@@ -149,4 +77,38 @@ exports.register = async (req, res) => { console.log(req.body)
           console.error(error);
           return res.status(400).json({message: 'Something went wrong!!!'})
       }
+}
+
+exports.login = async (req, res) => { //console.log(req.body)
+    try {
+        const USER = await User.findOne({email: req.body.email});
+      
+        if(!USER){ return res.status(400).send('incorrect username or password')}
+      
+        bcrypt.compare(req.body.password, USER.password, (error, isMatch) => {
+          if(error) return console.log(error);
+      
+          if(isMatch){
+
+            let user = {
+                id: USER._id,
+                name: USER.name,
+                email: USER.email,
+                role: USER.role
+            } 
+            //console.log(user)
+
+            const accessToken = jwt.sign(user, config.get('auth.jwt.secret'), {expiresIn: '1y'})
+
+            res.cookie("accessToken", accessToken, {
+                maxAge: 3.156e+10,
+                httpOnly: true,
+            })
+
+            return res.redirect('/catalog');
+          }
+        })
+  } catch (error) {
+        console.error(error)
+  }
 }

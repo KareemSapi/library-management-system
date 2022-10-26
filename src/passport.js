@@ -1,61 +1,52 @@
 /**
  * @title
- * Auth configuration
+ * Auth configuration: 
+ * 
+ * 
  * 
  * 
  * @lastEdit
- * Oct 24 2022, Kareem Sapi
+ * Oct 05 2022, Kareem Sapi
  */
 
- const passport = require('passport');
- const LocalStrategy = require('passport-local').Strategy;
- const passportJWT = require('passport-jwt');
- const JWTStrategy = passportJWT.Strategy;
- const ExtractJWT = passportJWT.ExtractJwt;
- 
- const User = require('./api/models/User');
- const bcrypt = require('bcrypt');
- const config = require('config');
- const secret = config.get('auth.jwt.secret');
- 
- passport.use(
-    new LocalStrategy( (email, password, done) => {console.log(email, password)
-        //Match user
-        User.findOne({ email: email })
-          .then(user => { console.log(user)
-              if(!user){
-                  return done(null, false, {message: 'Email or Password is wrong'});
-              }
-              //Match password
-              bcrypt.compare(password, user.password, (err, isMatch) => {
-                  if(err) throw err;
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const passportJWT = require('passport-jwt');
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
 
-                  if(isMatch){
-                      return done(null, {
-                        id: user._id,
-                        name: user.name,
-                        email: user.email,
-                        role: user.role
-                      });
-                  }
-                  else{
-                      return done(null, false, {message: 'Email or Password is wrong'})
-                  }
-              })
-          })
-          .catch(err => console.log(err));
-    } )
-)
- 
- /**
-  * @method: Authenticate JWT token
-  */
- 
- passport.use(new JWTStrategy({
-     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-     secretOrKey: secret,
-   }, 
-     function(jwt_payload, done){
-        return done(null, jwt_payload)
- }))
- 
+const User = require('./api/models/User');
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+const config = require('config');
+const secret = config.get('auth.jwt.secret');
+
+passport.use(new LocalStrategy(async (email, password, cb) => {
+try {
+	  const USER = await User.findOne({email: email});
+	
+	  if(!USER){ return cb(null, false)}
+	
+	  bcrypt.compare(password, USER.password, (error, isMatch) => {
+	    if(error) return console.log(error);
+	
+	    if(isMatch){
+	      return cb(null, USER)
+	    }
+	  })
+} catch (error) {
+	  console.error(error)
+}
+}))
+
+/**
+ * @method: Authenticate JWT token
+ */
+
+passport.use(new JWTStrategy({
+    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    secretOrKey: secret,
+  }, 
+    function(jwt_payload, done){
+       return done(null, jwt_payload)
+}))

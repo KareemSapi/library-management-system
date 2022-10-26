@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const BookCommentSchema = new Schema({
-  comment: { type: String, required: true},
+const BookFavouriteSchema = new Schema({
   book_id: { 
      type: mongoose.Schema.Types.ObjectId, 
      ref: 'Book', 
@@ -25,6 +24,6 @@ const BookCommentSchema = new Schema({
 // });
 
 // Export model
-const BookComment = mongoose.model("Book_Comment", BookCommentSchema);
+const BookFavourite = mongoose.model("Book_Favourite", BookFavouriteSchema);
 
-module.exports = BookComment;
+module.exports = BookFavourite;

@@ -16,8 +16,7 @@
  const mongoose = require('mongoose');
  const cookieParser = require('cookie-parser');
  const helmet = require('helmet')
- 
- require('./passport');
+
 
  // Set up default mongoose connection
 const mongoDB = config.get('db.mongoDb');
@@ -32,8 +31,11 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
  const authRouter = require(`./api/routes/auth`);
  const userRouter = require('./api/routes/user');
  const bookRouter = require('./api/routes/book');
+ const bookFeedbackRouter = require('./api/routes/book-feedback');
  
  const app = express();
+
+ require('./passport')
  
  app.set("views", path.join(__dirname, "views"));
  app.set("view engine", "pug");
@@ -45,6 +47,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
  app.use(cookieParser());
 //  app.use(helmet());
 
+
 app.use(express.static(path.join(__dirname, "public")));
  
  const app_name = "Library Management System";
@@ -54,10 +57,12 @@ app.use(express.static(path.join(__dirname, "public")));
  
  app.use(`/auth`, authRouter);
  app.use(`/user`,  userRouter);
- app.use(`/catalog`,  bookRouter);
+ app.use(`/catalog`, bookRouter);
+ app.use(`/feedback`, auth, bookFeedbackRouter);
  
  app.get('/', (req,res) => {
-     res.send("Welcome to " + app_name)
+     //res.send("Welcome to " + app_name)
+     res.render('login')
  })
  
  app.listen(PORT, console.log(`Server started listening on port: ${PORT}`))

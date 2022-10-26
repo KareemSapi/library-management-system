@@ -14,7 +14,7 @@ const BookLikeSchema = new Schema({
     ref: "User", 
     required: true 
     },
-  timestamps: true
+  
 
 });
 

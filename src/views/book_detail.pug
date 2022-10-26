@@ -13,14 +13,26 @@ block content
       if index < book.genre.length - 1
         |,
   div(class="row" style="margin-bottom: 20px;")
-    span(class="col-lg-4") 
-      button(class='btn btn-md col-md-4 btn-primary btn-block' type="submit") Like
+    span(class="col-lg-4")
+      form(method='POST' action='/feedback/like')
+       div.form-group
+         input#id.form-control(type='hidden',name='id', required='true', value=book._id ) 
+       button(class='btn btn-md col-md-4 btn-primary btn-block' type="submit") Like
 
-    span(class="col-lg-4") 
-      button(class='btn btn-md col-md-4 btn-primary btn-block' type="submit") Comment
+    span(class="col-lg-4")
+       form(method='POST' action='/feedback/mark')
+         div.form-group
+           input#id.form-control(type='hidden',name='id', required='true', value=book._id )  
+         button(class='btn btn-md col-md-4 btn-primary btn-block' type="submit") Favourite
 
-    span(class="col-lg-4") 
-      button(class='btn btn-md col-md-4 btn-primary btn-block' type="submit") Favourite
+  div(class="row" style="margin-bottom: 20px;")
+    span(class="col-lg-4")
+       form(method='POST' action='/feedback/comment')
+         div.form-group
+           input#id.form-control(type='hidden',name='id', required='true', value=book._id )
+         div.form-group
+           input#comment.form-control(type='textField',name='comment', required='true' placeholder="Leave your comment here" )   
+         button(class='btn btn-md col-md-4 btn-primary btn-block' type="submit") Comment
 
   //- div(class="row")
   //-   span(class="col-lg-4") 
