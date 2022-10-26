@@ -19,9 +19,9 @@
  const secret = config.get('auth.jwt.secret');
  
  passport.use(
-    new LocalStrategy( (username, password, done) => {console.log(username, password)
+    new LocalStrategy( (email, password, done) => {console.log(email, password)
         //Match user
-        User.findOne({ email: username })
+        User.findOne({ email: email })
           .then(user => { console.log(user)
               if(!user){
                   return done(null, false, {message: 'Email or Password is wrong'});

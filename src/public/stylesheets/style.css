@@ -2,7 +2,7 @@
     margin-top: 20px;
     padding: 0;
     list-style: none;
-  }
+}
 
   .form-signin {
     width: 100%;
@@ -69,7 +69,7 @@
     border-top-right-radius: 0;
   }
 
-$c-pagination-item: #000;
+/* $c-pagination-item: #000;
 $c-pagination-item-active: #fff;
 $c-pagination-active: red;
 
@@ -116,5 +116,5 @@ $c-pagination-active: red;
       color: $c-pagination-active;
     }
   }
-}
+} */
   

@@ -4,17 +4,17 @@ block content
   h1 #{user._id}
 
   p #[strong Name:]
-    a(href=user.name.url) #{user.name}
+    a(href=user.url) #{user.name}
   p #[strong Email:] #{user.email}
   p #[strong Role:] #{user.role}
 
-  div(class="row")
-    span(class="col-lg-4") 
-      button(class='btn btn-md col-md-4 btn-success btn-block' type="submit") Update
-    span(class="col-lg-4") 
-      button(class='btn btn-md col-md-4 btn-danger btn-block' type="submit") Delete
-//-   p #[strong Genre:]
-//-     each val, index in book.genre
-//-       a(href=val.url) #{val.name}
-//-       if index < book.genre.length - 1
-//-         |,
+  //- div(class="row")
+  //-   span(class="col-lg-4") 
+  //-     button(class='btn btn-md col-md-4 btn-success btn-block' type="submit") Update
+  //-   span(class="col-lg-4") 
+  //-     button(class='btn btn-md col-md-4 btn-danger btn-block' type="submit") Delete
+  hr
+  p
+    a(href=user.url+'/delete') Delete User
+  p
+    a(href=user.url+'/update') Update User
