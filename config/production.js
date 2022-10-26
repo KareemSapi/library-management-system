@@ -7,12 +7,12 @@ module.exports = {
   
    
     jwt: {
-        secret: 'SECRET',
+        secret: '',
     },
     
   
     db: {
-        mongoDb: 'mongodb+srv://kSapi:spdC-6*nmzuW-cd@cluster0.revcx.mongodb.net/library-management-system?retryWrites=true&w=majority'
+        mongoDb: ''
      
     },
   };
