@@ -35,15 +35,18 @@ exports.index = (req, res) => {
   
   // Display list of all books.
   exports.book_list = (req, res) => {
+    let limit = parseInt(req.query.limit) || 10
+    let page = parseInt(req.query.page) - 1 || 0
     Book.find({}, "title author")
     .sort({ title: 1 })
-    // .populate("author")
+    .skip(limit * page)
+    .limit(limit)
     .exec(function (err, list_books) {
       if (err) {
         return next(err);
       }
       //Successful, so render
-      res.render("book_list", { title: "Book List", book_list: list_books });
+      res.render("book_list", { title: "Book List", book_list: list_books, page_count: 50 });
     });
   };
   
