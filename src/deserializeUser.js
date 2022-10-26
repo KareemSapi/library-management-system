@@ -9,7 +9,7 @@ function deserializeUser(req, res, next){
         return next();
     }
 
-    const user =  jwt.verify(accessToken, config.get('jwt.secret'))
+    const user =  jwt.verify(accessToken, 'SECRET')
 
     if(user){
         req.user = user;
