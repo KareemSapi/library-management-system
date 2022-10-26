@@ -16,6 +16,7 @@
  const mongoose = require('mongoose');
  const cookieParser = require('cookie-parser');
  const helmet = require('helmet')
+ const deserializeUser = require('./deserializeUser')
 
 
  // Set up default mongoose connection
@@ -46,6 +47,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
  app.use(express.urlencoded({extended: false}))
  app.use(cookieParser());
 //  app.use(helmet());
+app.use(deserializeUser)
 
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -56,9 +58,9 @@ app.use(express.static(path.join(__dirname, "public")));
  const auth = passport.authenticate('jwt', {session: false})
  
  app.use(`/auth`, authRouter);
- app.use(`/user`,  userRouter);
- app.use(`/catalog`, bookRouter);
- app.use(`/feedback`, auth, bookFeedbackRouter);
+ app.use(`/user`, deserializeUser, userRouter);
+ app.use(`/catalog`, deserializeUser, bookRouter);
+ app.use(`/feedback`, deserializeUser, bookFeedbackRouter);
  
  app.get('/', (req,res) => {
      //res.send("Welcome to " + app_name)

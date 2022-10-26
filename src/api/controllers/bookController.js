@@ -34,7 +34,7 @@ exports.index = (req, res) => {
   };
   
   // Display list of all books.
-  exports.book_list = (req, res) => {
+  exports.book_list = (req, res) => { //console.log(req.user)
     let limit = parseInt(req.query.limit) || 10
     let page = parseInt(req.query.page) - 1 || 0
     Book.find({}, "title author")
@@ -103,11 +103,16 @@ exports.book_create_get = function (req, res, next) {
       }
       let genres = ['Fantasy', 'Fiction', 'Science', 'Horror']
 
-      res.render("book_form", {
-        title: "Create Book",
-        // authors: results.authors,
-        genres: genres,
-      });
+      if(req.user.role === 'admin'){
+        return res.render("book_form", {
+          title: "Create Book",
+          // authors: results.authors,
+          genres: genres,
+        });
+      }else{
+        return res.status(403).send('Forbiden: only Admin can create books')//res.redirect('/catalog')
+      }
+
     }
   );
 };
@@ -224,11 +229,16 @@ exports.book_delete_get = function (req, res, next) {
         res.redirect("/catalog/books");
       }
       // Successful, so render.
+    if(req.user.role === 'admin'){
       res.render("book_delete", {
         title: "Delete Book",
         book: results.book,
         // book_instances: results.book_bookinstances,
       });
+    }else{
+      return res.sendStatus(403)
+    }
+
     }
   );
 };
@@ -324,12 +334,17 @@ exports.book_update_get = function (req, res, next) {
       //     }
       //   }
       // }
-      res.render("book_form", {
-        title: "Update Book",
-        authors: results.book.author,
-        genres: results.book.genre,
-        book: results.book,
-      });
+
+      if(req.user.role === 'admin'){
+        return res.render("book_form", {
+          title: "Update Book",
+          authors: results.book.author,
+          genres: results.book.genre,
+          book: results.book,
+        });
+      }else{
+        return res.sendStatus(403)
+      }
     }
   );
 };

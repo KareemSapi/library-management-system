@@ -25,10 +25,14 @@ exports.user_detail =  (req, res, next) => {
 			return next(err);
 		  }
 		  // Successful, so render.
-		  res.render("user_detail", {
-			title: results.user.name,
-			user: results.user,
-		  });
+		  if(req.user.role === 'admin'){
+			res.render("user_detail", {
+				title: results.user.name,
+				user: results.user,
+			  });
+		  }else{
+			return res.redirect('/catalog')
+		  }
 		}
 	  );
 }
@@ -41,7 +45,11 @@ exports.user_list = (req, res) => {
         return next(err);
       }
       //Successful, so render
-      res.render("user_list", { title: "User List", user_list: list_users });
+      if(req.user.role === 'admin'){
+		return res.render("user_list", { title: "User List", user_list: list_users });
+	  }else{
+		return res.redirect('/catalog')
+	  }
     });
   };
 
@@ -87,10 +95,14 @@ exports.user_delete_get = function (req, res, next) {
 		  res.redirect("/user/");
 		}
 		// Successful, so render.
-		res.render("user_delete", {
-		  title: "Delete User",
-		  user: results.User,
-		});
+		if(req.user.role === 'admin'){
+			return res.render("user_delete", {
+				title: "Delete User",
+				user: results.User,
+			  });
+		}else{
+			return res.sendStatus(403)
+		}
 	  }
 	);
   };
@@ -143,7 +155,11 @@ exports.user_delete_get = function (req, res, next) {
 		return next(err);
 	  }
 	  // Success.
-	  res.render("user_form", { title: "Update User", user: user });
+	  if(req.user.role === 'admin'){
+		return res.render("user_form", { title: "Update User", user: user });
+	  }else{
+		return res.sendStatus(403)
+	  }
 	});
   };
   

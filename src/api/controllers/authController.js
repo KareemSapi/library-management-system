@@ -35,9 +35,8 @@ const config = require('config');
 // }
 
 exports.logout = (req, res) => {
-    req.logOut();
-    req.flash('success_msg', 'You are logged out');
-    res.redirect('/users/login');
+    //req.flash('success_msg', 'You are logged out');
+    res.redirect('/auth/login');
 }
 
 exports.register = async (req, res) => { //console.log(req.body)
